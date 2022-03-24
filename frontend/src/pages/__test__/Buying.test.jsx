@@ -1,5 +1,6 @@
 import { setupServer } from 'msw/node';
 import { rest } from 'msw';
+import { MemoryRouter } from 'react-router-dom';
 import { BASE_URL } from '../../utils';
 import {
   screen,
@@ -40,25 +41,25 @@ afterEach(() => server.resetHandlers());
 
 describe('after application fully loads', () => {
   beforeEach(async () => {
-    render(<Buying />);
-    await waitForElementToBeRemoved(() => screen.getByText('Loading...'));
+    render(<Buying />, {wrapper: MemoryRouter});
+    // await waitForElementToBeRemoved(() => screen.getByText(''));
   });
 
   it('renders the photos', () => {
     expect(screen.getByText('Unknown: Hello World')).toBeInTheDocument();
   });
 
-  // describe('when clicking in "Refresh" Button', () => {
-  //   beforeEach(async () => {
-  //     user.type(screen.getByLabelText('Your Name:'), 'Felix');
-  //     // await waitForElementToBeRemoved(() => screen.getByText('Loading...'));
+  describe('when clicking in "Refresh" Button', () => {
+    beforeEach(async () => {
+      user.type(screen.getByLabelText('Your Name:'), 'Felix');
+      // await waitForElementToBeRemoved(() => screen.getByText('Loading...'));
 
-  //   });
+    });
 
-  //   it('renders the newly loaded data', () => {
-  //     expect(screen.getByText('Felix: Hello World')).toBeInTheDocument();
-  //   });
-  // });
+    it('renders the newly loaded data', () => {
+      expect(screen.getByText('Felix: Hello World')).toBeInTheDocument();
+    });
+  });
 
   describe('when clicking in "Refresh" Button and server returns error', () => {
     beforeEach(async () => {
@@ -74,7 +75,7 @@ describe('after application fully loads', () => {
         )
       );
       user.click(screen.getByText('Refresh'));
-      await waitForElementToBeRemoved(() => screen.getByText('Loading...'));
+      // await waitForElementToBeRemoved(() => screen.getByText('Loading...'));
     });
 
     it('renders the error keeping the old data', () => {
@@ -82,21 +83,21 @@ describe('after application fully loads', () => {
     });
   });
 
-  // describe('when clicking in "Add to Favourites" changes the button text', () => {
-  //   beforeEach(async () => {
-  //     user.click(screen.getByRole('button', { name: 'Add To Favourites' }));
-  //     await waitForElementToBeRemoved(() =>
-  //       screen.getByRole('button', { name: 'Add To Favourites' })
-  //     );
-  //   });
+  describe('when clicking in "Add to Favourites" changes the button text', () => {
+    beforeEach(async () => {
+      user.click(screen.getByRole('button', { name: 'Add To Favourites' }));
+      // await waitForElementToBeRemoved(() =>
+      //   screen.getByRole('button', { name: 'Add To Favourites' })
+      // );
+    });
 
-  //   it('renders "Remove from Favourites"', () => {
-  //     expect(
-  //       screen.getByRole('button', { name: 'Remove from Favourites' })
-  //     ).toBeInTheDocument();
-  //     expect(
-  //       screen.queryByRole('button', { name: 'Add to Favourites' })
-  //     ).not.toBeInTheDocument();
-  //   });
-  // });
+    it('renders "Remove from Favourites"', () => {
+      expect(
+        screen.getByRole('button', { name: 'Remove from Favourites' })
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByRole('button', { name: 'Add to Favourites' })
+      ).not.toBeInTheDocument();
+    });
+  });
 });

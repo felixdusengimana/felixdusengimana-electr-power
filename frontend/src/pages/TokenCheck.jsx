@@ -7,7 +7,7 @@ import { BASE_URL } from "../utils";
 
 const TokenCheck = ()=>{
 
-  const [ meter_number, setMeterNumber ] = useState(0)
+  const [ token_number, setTokenNumber ] = useState(0)
     
   const [ error, setErorr ] = useState("")
   const [ isSuccess, setIsSucess ] = useState(false)
@@ -15,16 +15,20 @@ const TokenCheck = ()=>{
   const [ days, setDays ] = useState(0)
   
   const handleChange = (e)=>{
-    setMeterNumber(e.target.value);
+    setTokenNumber(e.target.value);
   }
 
-  const checkElectricty = async () => {
+  const checkElectricty = async (e) => {
+    e.preventDefault()
       try {
-          let { data } = await axios.get(`${BASE_URL}/meters/by-number/${meter_number}`)
+          let {data}  = await axios.post(`${BASE_URL}/tokens/load`, {
+            "token": token_number
+          })
           
           setErorr("")
           setIsSucess(true)
-          setDays(data.days)
+          setDays(data.body.meter.days)
+          console.log(data);
       } catch (e) {
           setIsSucess(false)
           setErorr(e.response.data.message)
@@ -32,13 +36,15 @@ const TokenCheck = ()=>{
   }
   
  return(
-<div className="flex h-96 items-center justify-center">
-{error !== "" && <div title="Error" className="py-10 text-red-500 w-[400px]">{error}</div>}
-        {isSuccess && <div className="py-10 text-lg text-green-500 w-[400px]">Success you have electirity for {days} days</div>}
-        
+<div className="flex flex-col h-96 items-center justify-center">
+   
 <div className="w-full max-w-xs mt-3">
   <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={checkElectricty}>
-
+  {error !== "" && <div title="Error" className="text-red-500 w-[400px]">{error}</div>}
+{isSuccess && <div className="text-lg text-green-500 w-[400px]">
+  <p>Success loaded electirity</p>
+<p>Days: {days}</p></div>}
+     
     <div className="mb-6">
     <div className="mb-4">
       <Input data-testid="meter_number_input" label={"Token Number"} placeholder="Token Number" handleOnChange={handleChange}/>
@@ -47,7 +53,7 @@ const TokenCheck = ()=>{
     </div>
 
     <div className="flex items-center justify-between">
-      <Button label={"Check Token"}/>
+      <Button type={"submit"} label={"Check Token"}/>
       <Link to="/buy" className="inline-block align-baseline text-sm text-blue-500 hover:text-blue-800" href="#">
         Buy Other Token?
       </Link>

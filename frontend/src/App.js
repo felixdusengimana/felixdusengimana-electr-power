@@ -5,6 +5,8 @@ import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
 import Buying from "./pages/Buying";
 import CheckBalance from "./pages/CheckBalance";
 import TokenCheck from "./pages/TokenCheck";
+import LoadToken from './pages/TokenCheck';
+
 
 function App() {
   return (
@@ -15,6 +17,7 @@ function App() {
         <Route path="/buy" element={<Buying/>}/>
         <Route path="/checkbalance" element={<CheckBalance/>}/>
         <Route path="/checktoken" element={<TokenCheck/>}/>
+        <Route path="/load-token" element={<LoadToken/>}/>
       </Routes>
     </Router>
   );

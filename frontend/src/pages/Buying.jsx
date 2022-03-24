@@ -19,33 +19,40 @@ const Buying = ()=>{
     var value = e.target.value;
     setbuyingData({ ...buyingData, [name]: value });
   }
-  const handleBuy = (e)=>{
+  const handleBuy = async (e)=>{
     e.preventDefault();
   
-    axios.post(`${BASE_URL}/tokens/buy`, buyingData)
-    .then((data)=>{
+    try {
+      let {data}  = await axios.post(`${BASE_URL}/tokens/buy`, buyingData)
+      
       setErorr("")
       setIsSucess(true)
       setToken(data.body.token)
-    })
-    .catch((error)=>{
-      setIsSucess(false)
-      setErorr(error.response.data.message)
-    })
+  } catch (error) {
+    setIsSucess(false)
+    setErorr(error.response.data.message)
+  }
+
   }
 
 return(
-<div className="flex h-96 items-center justify-center">
+  <>
 
-<h1 className="text-3xl font-medium">Buy Electricty</h1>
-        {error !== "" && <div className="py-10 text-red-500 w-[400px]">{error}</div>}
-        {isSuccess &&
-            <div className="py-10 text-lg text-green-500 w-[400px]">Sucessfully Token bought :{token} ..</div>}
+<div className="flex flex-col h-full mt-10 items-center justify-center">
 
-<div className="w-full max-w-xs mt-3">
+<div className="w-full max-w-sm">
+
   <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={handleBuy}>
 
-    <div className="mb-4">
+  <h1 className="text-3xl font-medium">Buy Electricty</h1>
+{error !== "" && <div className="text-red-500 w-[400px]">{error}</div>}
+{isSuccess &&
+    <div className="text-lg text-green-500 w-[400px]">
+      <p>Sucessfully Token bought</p>
+     <p>Your token: {token}</p>
+    </div>}
+
+    <div className="mb-4 mt-4">
       <Input 
       label={"Amount of money"}
       placeholder="Amount Of Money"
@@ -77,6 +84,7 @@ return(
   </p>
 </div>
 </div>
+</>
  )
 }
 

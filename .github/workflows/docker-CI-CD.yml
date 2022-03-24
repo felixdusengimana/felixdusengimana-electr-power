@@ -40,7 +40,7 @@ jobs:
       - name: Client Build and push
         uses: docker/build-push-action@v2
         with:
-          context: ./client
+          context: ./frontend
           file: ./client/Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
           push: true
@@ -63,7 +63,7 @@ jobs:
       - name: server Build and push
         uses: docker/build-push-action@v2
         with:
-          context: ./server
+          context: ./backend
           file: ./server/Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
           push: true

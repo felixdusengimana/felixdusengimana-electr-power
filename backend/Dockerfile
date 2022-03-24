@@ -20,4 +20,4 @@ ENV PORT 8000
 
 EXPOSE 8000
 
-CMD ["pnpm", "start"]
+CMD ["pnpm", "dev"]
